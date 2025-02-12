@@ -19,8 +19,7 @@ fun NoteItem.toNoteEntityForDelete(
         title = title,
         description = description,
         imageUrl = imageUrl,
-        dateAdded = dateAdded,
-        id = id
+        dateAdded = dateAdded
     )
 }
 
@@ -29,7 +28,6 @@ fun NoteEntity.toNoteItem(): NoteItem {
         title = title,
         description = description,
         imageUrl = imageUrl,
-        dateAdded = dateAdded,
-        id = id ?: 0
+        dateAdded = dateAdded
     )
 }
