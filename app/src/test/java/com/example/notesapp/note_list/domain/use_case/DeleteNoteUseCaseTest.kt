@@ -24,8 +24,8 @@ class DeleteNoteUseCaseTest {
     }
 
     @Test
-    fun `delete note , return list without the note`()= runTest {
-        val note=NoteItem("title","desc","imgUrl",10)
+    fun `delete note , return list without the note`() = runTest {
+        val note = NoteItem("title", "desc", "imgUrl", 10)
         fakeNoteRepository.upsertNote(note)
         assertThat(fakeNoteRepository.getAllNotes().contains(note)).isTrue()
         deleteNoteUseCase.invoke(note)
