@@ -52,6 +52,11 @@ android {
     }
 }
 
+tasks.whenTaskAdded {
+if (name=="assembleDebug" || name=="assembleRelease"){
+    dependsOn("testDebugUnitTest")
+}
+}
 dependencies {
 
     implementation(libs.androidx.core.ktx)
