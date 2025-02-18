@@ -6,7 +6,7 @@ import com.example.notesapp.core.domain.model.Images
 fun ImageListDto.toImages(): Images {
     return Images(
         images = hits?.map { imageDto ->
-            imageDto.imageURL ?: ""
+            imageDto.previewURL ?: ""
         } ?: emptyList()
     )
 }

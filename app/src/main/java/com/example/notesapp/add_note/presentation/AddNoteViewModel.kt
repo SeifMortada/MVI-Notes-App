@@ -42,7 +42,9 @@ class AddNoteViewModel @Inject constructor(
     fun onAction(action: AddNoteActions) {
         when (action) {
             is AddNoteActions.UpdateTitle -> {
-                TODO()
+                _addNoteState.update {
+                    it.copy(title = action.newTitle)
+                }
             }
 
             is AddNoteActions.UpdateDescription -> {

@@ -1,5 +1,6 @@
 package com.example.notesapp.core.data.remote.api
 
+import com.example.notesapp.BuildConfig
 import com.example.notesapp.core.data.remote.RemoteConstants
 import com.example.notesapp.core.data.remote.dto.ImageListDto
 import retrofit2.http.GET
@@ -9,6 +10,6 @@ interface ImagesApi {
     @GET("/api/")
     suspend fun searchImages(
         @Query("q") query: String,
-        @Query("key") apiKey: String = RemoteConstants.API_KEY
+        @Query("key") apiKey: String = BuildConfig.API_KEY
     ): ImageListDto?
 }
