@@ -16,9 +16,6 @@ import org.junit.Test
 class AddNoteViewModelTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
-
-    @get:Rule
-    var mainCoroutineRule = MainCoroutineRule()
     private lateinit var repository: NoteRepository
     private lateinit var viewModel: AddNoteViewModel
 

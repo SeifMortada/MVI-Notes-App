@@ -1,12 +1,14 @@
 package com.example.notesapp.add_note.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.notesapp.add_note.domain.usecases.UpsertNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class AddNoteState(
@@ -52,7 +54,14 @@ class AddNoteViewModel @Inject constructor(private val upsetNoteUseCase: UpsertN
             }
 
             AddNoteActions.SaveNote -> {
-                TODO()
+                viewModelScope.launch {
+                    val isSaved = upsertNote(
+                        title = addNoteState.value.title,
+                        description = addNoteState.value.description,
+                        imageUrl = addNoteState.value.imageUrl
+                    )
+                    _noteSavedChannel.send(isSaved)
+                }
             }
         }
     }
@@ -61,7 +70,7 @@ class AddNoteViewModel @Inject constructor(private val upsetNoteUseCase: UpsertN
         title: String,
         description: String,
         imageUrl: String
-    ):Boolean{
+    ): Boolean {
         return upsetNoteUseCase.invoke(title, description, imageUrl)
     }
 
