@@ -2,12 +2,14 @@ package com.example.notesapp.add_note.presentation
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.notesapp.MainCoroutineRule
+import com.example.notesapp.add_note.domain.usecases.SearchImagesUseCase
 import com.example.notesapp.add_note.domain.usecases.UpsertNoteUseCase
+import com.example.notesapp.core.data.repository.FakeImagesRepository
 import com.example.notesapp.core.data.repository.FakeNoteRepository
-import com.example.notesapp.core.domain.repository.NoteRepository
 import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
 
 import org.junit.Before
 import org.junit.Rule
@@ -16,14 +18,21 @@ import org.junit.Test
 class AddNoteViewModelTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
-    private lateinit var repository: NoteRepository
+
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
+
+    private lateinit var notesRepository: FakeNoteRepository
+    private lateinit var imagesRepository: FakeImagesRepository
     private lateinit var viewModel: AddNoteViewModel
 
     @Before
     fun setUp() {
-        repository = FakeNoteRepository()
-        val upsertNoteUseCase = UpsertNoteUseCase(repository)
-        viewModel = AddNoteViewModel(upsertNoteUseCase)
+        notesRepository = FakeNoteRepository()
+        imagesRepository=FakeImagesRepository()
+        val upsertNoteUseCase = UpsertNoteUseCase(notesRepository)
+        val searchImagesUseCase = SearchImagesUseCase(imagesRepository)
+        viewModel = AddNoteViewModel(upsertNoteUseCase, searchImagesUseCase)
     }
 
     @Test
@@ -55,6 +64,29 @@ class AddNoteViewModelTest {
                 description = "description",
                 imageUrl = "imageUrl"
             )
-        Truth.assertThat(isInserted).isTrue()
+        assertThat(isInserted).isTrue()
+    }
+
+    @Test
+    fun `test search image with empty query,image list is empty`() = runTest {
+        viewModel.searchImages("")
+        advanceUntilIdle()
+        assertThat(viewModel.addNoteState.value.imageList).isEmpty()
+    }
+
+    @Test
+    fun `test search image with valid query but no result,image list is empty`() = runTest {
+        imagesRepository.shouldReturnError(true)
+        viewModel.searchImages("Query")
+        advanceUntilIdle()
+        assertThat(viewModel.addNoteState.value.imageList).isEmpty()
+    }
+
+    @Test
+    fun `test search image with valid query,image list is not empty`() = runTest {
+        imagesRepository.shouldReturnError(false)
+        viewModel.searchImages("Query")
+        advanceUntilIdle()
+        assertThat(viewModel.addNoteState.value.imageList).isNotEmpty()
     }
 }

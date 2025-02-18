@@ -6,7 +6,7 @@ import com.example.notesapp.core.domain.repository.ImagesRepository
 class FakeImagesRepository : ImagesRepository {
     private var shouldReturnError = false
 
-    fun setShouldReturnError(value: Boolean) {
+    fun shouldReturnError(value: Boolean) {
         shouldReturnError = value
     }
 

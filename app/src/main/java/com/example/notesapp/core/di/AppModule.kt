@@ -2,11 +2,14 @@ package com.example.notesapp.core.di
 
 import android.app.Application
 import androidx.room.Room
+import com.example.notesapp.add_note.domain.usecases.SearchImagesUseCase
 import com.example.notesapp.add_note.domain.usecases.UpsertNoteUseCase
 import com.example.notesapp.core.data.local.NoteDb
 import com.example.notesapp.core.data.remote.RemoteConstants
 import com.example.notesapp.core.data.remote.api.ImagesApi
+import com.example.notesapp.core.data.repository.ImagesRepositoryImpl
 import com.example.notesapp.core.data.repository.NoteRepositoryImpl
+import com.example.notesapp.core.domain.repository.ImagesRepository
 import com.example.notesapp.core.domain.repository.NoteRepository
 import com.example.notesapp.note_list.domain.use_case.DeleteNoteUseCase
 import com.example.notesapp.note_list.domain.use_case.GetAllNotesUseCase
@@ -61,5 +64,15 @@ object AppModule {
             .baseUrl(RemoteConstants.BASE_URL)
             .build()
             .create(ImagesApi::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideSearchImagesUseCase(imagesRepository: ImagesRepository): SearchImagesUseCase {
+        return SearchImagesUseCase(imagesRepository)
+    }
+    @Provides
+    @Singleton
+    fun provideImagesRepository(imagesApi: ImagesApi): ImagesRepository {
+        return ImagesRepositoryImpl(imagesApi)
     }
 }

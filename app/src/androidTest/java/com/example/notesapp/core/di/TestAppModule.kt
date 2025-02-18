@@ -2,11 +2,14 @@ package com.example.notesapp.core.di
 
 import android.app.Application
 import androidx.room.Room
+import com.example.notesapp.add_note.domain.usecases.SearchImagesUseCase
 import com.example.notesapp.add_note.domain.usecases.UpsertNoteUseCase
 import com.example.notesapp.core.data.local.NoteDb
 import com.example.notesapp.core.data.remote.RemoteConstants
 import com.example.notesapp.core.data.remote.api.ImagesApi
+import com.example.notesapp.core.data.repository.FakeAndroidImagesRepository
 import com.example.notesapp.core.data.repository.FakeAndroidNoteRepository
+import com.example.notesapp.core.domain.repository.ImagesRepository
 import com.example.notesapp.core.domain.repository.NoteRepository
 import com.example.notesapp.note_list.domain.use_case.DeleteNoteUseCase
 import com.example.notesapp.note_list.domain.use_case.GetAllNotesUseCase
@@ -51,6 +54,7 @@ object TestAppModule {
     fun provideUpsertNoteUseCase(noteRepository: NoteRepository): UpsertNoteUseCase {
         return UpsertNoteUseCase(noteRepository)
     }
+
     @Provides
     @Singleton
     fun provideImagesApi(): ImagesApi {
@@ -59,5 +63,17 @@ object TestAppModule {
             .baseUrl(RemoteConstants.BASE_URL)
             .build()
             .create(ImagesApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFakeImagesRepository(): ImagesRepository {
+        return FakeAndroidImagesRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSearchImagesUseCase(imagesRepository: ImagesRepository): SearchImagesUseCase {
+        return SearchImagesUseCase(imagesRepository)
     }
 }
