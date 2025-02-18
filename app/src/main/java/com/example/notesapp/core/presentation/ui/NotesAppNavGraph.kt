@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.notesapp.add_note.presentation.AddNoteScreenCore
 import com.example.notesapp.core.presentation.screens.Screen
 import com.example.notesapp.note_list.ui.NoteListScreenCore
 
@@ -25,7 +26,9 @@ fun NotesAppNavGraph(modifier: Modifier = Modifier) {
             )
         }
         composable<Screen.AddNote> {
-
+            AddNoteScreenCore(onSave = {
+                navController.popBackStack()
+            })
         }
     }
 }

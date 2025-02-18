@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,6 +8,10 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinSerialization)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.compose.compiler)
+}
+
+val localProperties = Properties().apply {
+    load(FileInputStream("local.properties"))
 }
 
 android {
@@ -17,6 +24,11 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"${localProperties.getProperty("API_KEY")}\""
+        )
 
         testInstrumentationRunner = "com.example.notesapp.HiltTestRunner"
         vectorDrawables {
@@ -42,6 +54,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -53,9 +66,9 @@ android {
 }
 
 tasks.whenTaskAdded {
-if (name=="assembleDebug" || name=="assembleRelease"){
-    dependsOn("testDebugUnitTest")
-}
+    if (name == "assembleDebug" || name == "assembleRelease") {
+        dependsOn("testDebugUnitTest")
+    }
 }
 dependencies {
 
