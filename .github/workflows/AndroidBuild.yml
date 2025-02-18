@@ -2,9 +2,9 @@ name: Android Build
 
 on:
   pull_request:
-    branches: ["master"]
+    branches: [ "master" ]
   push:
-    branches: ["master"]
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -21,6 +21,10 @@ jobs:
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
+
+      - name: Create local.properties
+        run: |
+          echo "API_KEY=${{ secrets.API_KEY }}" > local.properties
 
       - name: Build with Gradle
         run: ./gradlew build
